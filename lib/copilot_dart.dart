@@ -278,6 +278,15 @@ class CopilotDart {
       },
     );
   }
+  
+  static Future<void> enableInAppMessages() async {
+    await _channel.invokeMethod('enableInAppMessages');
+  }
+
+  static Future<void> disableInAppMessages() async {
+    await _channel.invokeMethod('disableInAppMessages');
+  }
+
 }
 
 enum FirmwareUpgradeStatus {

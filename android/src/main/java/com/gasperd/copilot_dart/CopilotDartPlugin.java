@@ -52,7 +52,6 @@ public class CopilotDartPlugin extends Application implements FlutterPlugin, Met
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "copilot_dart");
         channel.setMethodCallHandler(this);
-
         initCopilot();
     }
 
@@ -62,13 +61,13 @@ public class CopilotDartPlugin extends Application implements FlutterPlugin, Met
         Copilot.setup(this, providers);
         CopilotTokenProvider tokenProvider = new DartCopilotTokenProvider();
         Copilot.getInstance().Manage.YourOwn.Auth.setCopilotTokenProvider(tokenProvider);
-
     }
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
 
         switch (call.method) {
+
             case "sessionStarted" -> {
                 String userId = call.argument("userId");
                 boolean isCopilotAnalysisConsentApproved = call.argument("isCopilotAnalysisConsentApproved");
@@ -78,15 +77,22 @@ public class CopilotDartPlugin extends Application implements FlutterPlugin, Met
                 }
                 Copilot.getInstance().Manage.YourOwn.sessionStarted(userId, isCopilotAnalysisConsentApproved);
             }
+
             case "sessionEnded" -> Copilot.getInstance().Manage.YourOwn.sessionEnded();
+
             case "setCopilotAnalysisConsent" -> {
                 boolean isConsentApproved = call.argument("isConsentApproved");
                 Copilot.getInstance().Manage.YourOwn.setCopilotAnalysisConsent(isConsentApproved);
             }
+
             case "logSignupEvent" -> Copilot.getInstance().Report.logEvent(new SignupAnalyticsEvent());
+
             case "logLoginEvent" -> Copilot.getInstance().Report.logEvent(new LoggedInAnalyticsEvent());
+
             case "logLogoutEvent" -> Copilot.getInstance().Report.logEvent(new LoggedOutAnalyticsEvent());
+
             case "logSuccessfulElevateAnonymousEvent" -> Copilot.getInstance().Report.logEvent(new SuccessfulElevateAnonymousAnalyticsEvent());
+
             case "logAcceptTermsOfUseEvent" -> {
                 String version = call.argument("version");
                 if (version == null) {
@@ -95,6 +101,7 @@ public class CopilotDartPlugin extends Application implements FlutterPlugin, Met
                 }
                 Copilot.getInstance().Report.logEvent(new AcceptTermsAnalyticsEvent(version));
             }
+
             case "logContactSupportEvent" -> {
                 String supportCase = call.argument("supportCase");
                 String thingId = call.argument("thingId");
@@ -105,6 +112,7 @@ public class CopilotDartPlugin extends Application implements FlutterPlugin, Met
                 }
                 Copilot.getInstance().Report.logEvent(new ContactSupportAnalyticsEvent(supportCase, thingId, screenName));
             }
+
             case "logOnBoardingStartedEvent" -> {
                 String flowId = call.argument("flowId");
                 String screenName = call.argument("screenName");
@@ -114,6 +122,7 @@ public class CopilotDartPlugin extends Application implements FlutterPlugin, Met
                 }
                 Copilot.getInstance().Report.logEvent(new OnBoardingStartedAnalyticsEvent(flowId, screenName));
             }
+
             case "logOnBoardingEndedEvent" -> {
                 String flowId = call.argument("flowId");
                 String screenName = call.argument("screenName");
@@ -123,39 +132,47 @@ public class CopilotDartPlugin extends Application implements FlutterPlugin, Met
                 }
                 Copilot.getInstance().Report.logEvent(new OnBoardingEndedAnalyticsEvent(flowId, screenName));
             }
+
             case "logTapConnectDeviceEvent" -> Copilot.getInstance().Report.logEvent(new TapConnectDeviceAnalyticsEvent());
+
             case "logThingConnectedEvent" -> {
                 String thingId = call.argument("thingId");
                 String screenName = call.argument("screenName");
                 Copilot.getInstance().Report.logEvent(new ThingConnectedAnalyticsEvent(thingId, screenName));
             }
+
             case "logThingDiscoveredEvent" -> {
                 String thingId = call.argument("thingId");
                 Copilot.getInstance().Report.logEvent(new ThingDiscoveredAnalyticsEvent(thingId));
             }
+
             case "logThingInfoEvent" -> {
                 String thingFirmware = call.argument("thingFirmware");
                 String thingModel = call.argument("thingModel");
                 String thingId = call.argument("thingId");
                 Copilot.getInstance().Report.logEvent(new ThingInfoAnalyticsEvent(thingFirmware, thingModel, thingId));
             }
+
             case "logThingConnectionFailedEvent" -> {
                 String failureReason = call.argument("failureReason");
                 Copilot.getInstance().Report.logEvent(new ThingConnectionFailedAnalyticsEvent(failureReason));
             }
+
             case "logConsumableUsageEvent" -> {
                 String screenName = call.argument("screenName");
                 String consumableType = call.argument("consumableType");
                 String thingId = call.argument("thingId");
                 Copilot.getInstance().Report.logEvent(new ConsumableUsageAnalyticsEvent(screenName, consumableType, thingId));
             }
+
             case "logConsumableDepletedEvent" -> {
                 String screenName = call.argument("screenName");
                 String consumableType = call.argument("consumableType");
                 String thingId = call.argument("thingId");
                 Copilot.getInstance().Report.logEvent(new ConsumableDepletedAnalyticsEvent(screenName, consumableType, thingId));
             }
-                case "logScreenLoadEvent" -> {
+
+            case "logScreenLoadEvent" -> {
                 String screenName = call.argument("screenName");
                 if (screenName == null) {
                     result.error("NULL", "Screen name is null", null);
@@ -163,6 +180,7 @@ public class CopilotDartPlugin extends Application implements FlutterPlugin, Met
                 }
                 Copilot.getInstance().Report.logEvent(new ScreenLoadAnalyticsEvent(screenName));
             }
+
             case "logTapMenuEvent" -> {
                 String screenName = call.argument("screenName");
                 if (screenName == null) {
@@ -171,12 +189,15 @@ public class CopilotDartPlugin extends Application implements FlutterPlugin, Met
                 }
                 Copilot.getInstance().Report.logEvent(new TapMenuAnalyticsEvent(screenName));
             }
+
             case "logTapMenuItemEvent" -> {
                 String menuItem = call.argument("menuItem");
                 String screenName = call.argument("screenName");
                 Copilot.getInstance().Report.logEvent(new TapMenuItemAnalyticsEvent(menuItem, screenName));
             }
+
             case "logFirmwareUpgradeStartedEvent" -> Copilot.getInstance().Report.logEvent(new FirmwareUpgradeStartedAnalyticsEvent());
+
             case "logFirmwareUpgradeCompletedEvent" -> {
                 String firmwareUpgradeStatusString = call.argument("firmwareUpgradeStatus");
                 if (firmwareUpgradeStatusString == null) {
@@ -191,11 +212,17 @@ public class CopilotDartPlugin extends Application implements FlutterPlugin, Met
                 }
                 Copilot.getInstance().Report.logEvent(new FirmwareUpgradeCompletedAnalyticsEvent(firmwareUpgradeStatus));
             }
+
             case "logErrorReportEvent" -> {
                 String error = call.argument("error");
                 String screenName = call.argument("screenName");
                 Copilot.getInstance().Report.logEvent(new ErrorAnalyticsEvent(error, screenName));
             }
+
+            case "enableInAppMessages" -> Copilot.getInstance().InAppMessages.enable();
+
+            case "disableInAppMessages" -> Copilot.getInstance().InAppMessages.disable();
+
             default -> result.notImplemented();
         }
 
