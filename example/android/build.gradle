@@ -1,0 +1,42 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        maven {
+            url "https://mymavenrepo.com/repo/i0DkV5KtDEuOB0P66JPC/"
+            credentials {
+                username "myMavenRepo"
+                password "yawetagtoa"
+            }
+        }
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.copilot:copilot-api-access:4.8.0'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven {
+            url "https://mymavenrepo.com/repo/i0DkV5KtDEuOB0P66JPC/"
+            credentials {
+                username "myMavenRepo"
+                password "yawetagtoa"
+            }
+        }
+    }
+}
+
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    project.evaluationDependsOn(':app')
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
