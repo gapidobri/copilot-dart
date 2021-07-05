@@ -27,6 +27,7 @@ import com.copilot.analytics.predifined.ThingConnectionFailedAnalyticsEvent;
 import com.copilot.analytics.predifined.ThingDiscoveredAnalyticsEvent;
 import com.copilot.analytics.predifined.ThingInfoAnalyticsEvent;
 import com.copilot.core.Copilot;
+import com.copilot.core.facade.impl.manage.auth.CopilotTokenProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,9 @@ public class CopilotDartPlugin extends Application implements FlutterPlugin, Met
         List<EventLogProvider> providers = new ArrayList<>();
         providers.add(new FirebaseAnalyticsEventLogProvider(this));
         Copilot.setup(this, providers);
+        CopilotTokenProvider tokenProvider = new DartCopilotTokenProvider();
+        Copilot.getInstance().Manage.YourOwn.Auth.setCopilotTokenProvider(tokenProvider);
+
     }
 
     @Override
