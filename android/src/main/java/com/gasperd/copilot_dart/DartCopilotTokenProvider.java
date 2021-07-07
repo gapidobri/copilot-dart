@@ -17,7 +17,7 @@ public class DartCopilotTokenProvider implements CopilotTokenProvider {
     public String generateUserAuthKey(String userId) throws GeneralErrorException, ConnectivityException {
         HashMap<String, Object> arguments = new HashMap<>();
         arguments.put("userId", userId);
-        SimpleSettableFuture<String> future = new SimpleSettableFuture<>();
+        final SimpleSettableFuture<String> future = new SimpleSettableFuture<>();
         channel.invokeMethod("generateUserAuthKey", arguments, new MethodChannel.Result() {
             @Override
             public void success(Object result) {
