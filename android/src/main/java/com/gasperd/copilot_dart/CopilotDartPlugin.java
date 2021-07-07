@@ -66,9 +66,11 @@ public class CopilotDartPlugin extends Application implements FlutterPlugin, Met
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
 
+        String screenName, flowId, thingId, consumableType;
+
         switch (call.method) {
 
-            case "sessionStarted" -> {
+            case "sessionStarted":
                 String userId = call.argument("userId");
                 boolean isCopilotAnalysisConsentApproved = call.argument("isCopilotAnalysisConsentApproved");
                 if (userId == null) {
@@ -76,129 +78,143 @@ public class CopilotDartPlugin extends Application implements FlutterPlugin, Met
                     return;
                 }
                 Copilot.getInstance().Manage.YourOwn.sessionStarted(userId, isCopilotAnalysisConsentApproved);
-            }
+                break;
 
-            case "sessionEnded" -> Copilot.getInstance().Manage.YourOwn.sessionEnded();
+            case "sessionEnded":
+                Copilot.getInstance().Manage.YourOwn.sessionEnded();
+                break;
 
-            case "setCopilotAnalysisConsent" -> {
+            case "setCopilotAnalysisConsent":
                 boolean isConsentApproved = call.argument("isConsentApproved");
                 Copilot.getInstance().Manage.YourOwn.setCopilotAnalysisConsent(isConsentApproved);
-            }
+                break;
 
-            case "logSignupEvent" -> Copilot.getInstance().Report.logEvent(new SignupAnalyticsEvent());
+            case "logSignupEvent":
+                Copilot.getInstance().Report.logEvent(new SignupAnalyticsEvent());
+                break;
 
-            case "logLoginEvent" -> Copilot.getInstance().Report.logEvent(new LoggedInAnalyticsEvent());
+            case "logLoginEvent":
+                Copilot.getInstance().Report.logEvent(new LoggedInAnalyticsEvent());
+                break;
 
-            case "logLogoutEvent" -> Copilot.getInstance().Report.logEvent(new LoggedOutAnalyticsEvent());
+            case "logLogoutEvent":
+                Copilot.getInstance().Report.logEvent(new LoggedOutAnalyticsEvent());
+                break;
 
-            case "logSuccessfulElevateAnonymousEvent" -> Copilot.getInstance().Report.logEvent(new SuccessfulElevateAnonymousAnalyticsEvent());
+            case "logSuccessfulElevateAnonymousEvent":
+                Copilot.getInstance().Report.logEvent(new SuccessfulElevateAnonymousAnalyticsEvent());
+                break;
 
-            case "logAcceptTermsOfUseEvent" -> {
+            case "logAcceptTermsOfUseEvent":
                 String version = call.argument("version");
                 if (version == null) {
                     result.error("NULL", "Version is null", null);
                     return;
                 }
                 Copilot.getInstance().Report.logEvent(new AcceptTermsAnalyticsEvent(version));
-            }
+                break;
 
-            case "logContactSupportEvent" -> {
+            case "logContactSupportEvent":
                 String supportCase = call.argument("supportCase");
-                String thingId = call.argument("thingId");
-                String screenName = call.argument("screenName");
+                thingId = call.argument("thingId");
+                screenName = call.argument("screenName");
                 if (supportCase == null) {
                     result.error("NULL", "Support case is null", null);
                     return;
                 }
                 Copilot.getInstance().Report.logEvent(new ContactSupportAnalyticsEvent(supportCase, thingId, screenName));
-            }
+                break;
 
-            case "logOnBoardingStartedEvent" -> {
-                String flowId = call.argument("flowId");
-                String screenName = call.argument("screenName");
+            case "logOnBoardingStartedEvent":
+                flowId = call.argument("flowId");
+                screenName = call.argument("screenName");
                 if (flowId == null) {
                     result.error("NULL", "Flow id is null", null);
                     return;
                 }
                 Copilot.getInstance().Report.logEvent(new OnBoardingStartedAnalyticsEvent(flowId, screenName));
-            }
+                break;
 
-            case "logOnBoardingEndedEvent" -> {
-                String flowId = call.argument("flowId");
-                String screenName = call.argument("screenName");
+            case "logOnBoardingEndedEvent":
+                flowId = call.argument("flowId");
+                screenName = call.argument("screenName");
                 if (flowId == null) {
                     result.error("NULL", "Flow id is null", null);
                     return;
                 }
                 Copilot.getInstance().Report.logEvent(new OnBoardingEndedAnalyticsEvent(flowId, screenName));
-            }
+                break;
 
-            case "logTapConnectDeviceEvent" -> Copilot.getInstance().Report.logEvent(new TapConnectDeviceAnalyticsEvent());
+            case "logTapConnectDeviceEvent":
+                Copilot.getInstance().Report.logEvent(new TapConnectDeviceAnalyticsEvent());
+                break;
 
-            case "logThingConnectedEvent" -> {
-                String thingId = call.argument("thingId");
-                String screenName = call.argument("screenName");
+            case "logThingConnectedEvent":
+                thingId = call.argument("thingId");
+                screenName = call.argument("screenName");
                 Copilot.getInstance().Report.logEvent(new ThingConnectedAnalyticsEvent(thingId, screenName));
-            }
+                break;
 
-            case "logThingDiscoveredEvent" -> {
-                String thingId = call.argument("thingId");
+            case "logThingDiscoveredEvent":
+                thingId = call.argument("thingId");
                 Copilot.getInstance().Report.logEvent(new ThingDiscoveredAnalyticsEvent(thingId));
-            }
+                break;
 
-            case "logThingInfoEvent" -> {
+            case "logThingInfoEvent":
                 String thingFirmware = call.argument("thingFirmware");
                 String thingModel = call.argument("thingModel");
-                String thingId = call.argument("thingId");
+                thingId = call.argument("thingId");
                 Copilot.getInstance().Report.logEvent(new ThingInfoAnalyticsEvent(thingFirmware, thingModel, thingId));
-            }
+                break;
 
-            case "logThingConnectionFailedEvent" -> {
+            case "logThingConnectionFailedEvent":
                 String failureReason = call.argument("failureReason");
                 Copilot.getInstance().Report.logEvent(new ThingConnectionFailedAnalyticsEvent(failureReason));
-            }
+                break;
 
-            case "logConsumableUsageEvent" -> {
-                String screenName = call.argument("screenName");
-                String consumableType = call.argument("consumableType");
-                String thingId = call.argument("thingId");
+            case "logConsumableUsageEvent":
+                screenName = call.argument("screenName");
+                consumableType = call.argument("consumableType");
+                thingId = call.argument("thingId");
                 Copilot.getInstance().Report.logEvent(new ConsumableUsageAnalyticsEvent(screenName, consumableType, thingId));
-            }
+                break;
 
-            case "logConsumableDepletedEvent" -> {
-                String screenName = call.argument("screenName");
-                String consumableType = call.argument("consumableType");
-                String thingId = call.argument("thingId");
+            case "logConsumableDepletedEvent":
+                screenName = call.argument("screenName");
+                consumableType = call.argument("consumableType");
+                thingId = call.argument("thingId");
                 Copilot.getInstance().Report.logEvent(new ConsumableDepletedAnalyticsEvent(screenName, consumableType, thingId));
-            }
+                break;
 
-            case "logScreenLoadEvent" -> {
-                String screenName = call.argument("screenName");
+            case "logScreenLoadEvent":
+                screenName = call.argument("screenName");
                 if (screenName == null) {
                     result.error("NULL", "Screen name is null", null);
                     return;
                 }
                 Copilot.getInstance().Report.logEvent(new ScreenLoadAnalyticsEvent(screenName));
-            }
+                break;
 
-            case "logTapMenuEvent" -> {
-                String screenName = call.argument("screenName");
+            case "logTapMenuEvent":
+                screenName = call.argument("screenName");
                 if (screenName == null) {
                     result.error("NULL", "Screen name is null", null);
                     return;
                 }
                 Copilot.getInstance().Report.logEvent(new TapMenuAnalyticsEvent(screenName));
-            }
+                break;
 
-            case "logTapMenuItemEvent" -> {
+            case "logTapMenuItemEvent":
                 String menuItem = call.argument("menuItem");
-                String screenName = call.argument("screenName");
+                screenName = call.argument("screenName");
                 Copilot.getInstance().Report.logEvent(new TapMenuItemAnalyticsEvent(menuItem, screenName));
-            }
+                break;
 
-            case "logFirmwareUpgradeStartedEvent" -> Copilot.getInstance().Report.logEvent(new FirmwareUpgradeStartedAnalyticsEvent());
+            case "logFirmwareUpgradeStartedEvent":
+                Copilot.getInstance().Report.logEvent(new FirmwareUpgradeStartedAnalyticsEvent());
+                break;
 
-            case "logFirmwareUpgradeCompletedEvent" -> {
+            case "logFirmwareUpgradeCompletedEvent":
                 String firmwareUpgradeStatusString = call.argument("firmwareUpgradeStatus");
                 if (firmwareUpgradeStatusString == null) {
                     result.error("NULL", "Firmware upgrade status name is null", null);
@@ -211,19 +227,24 @@ public class CopilotDartPlugin extends Application implements FlutterPlugin, Met
                     firmwareUpgradeStatus = FirmwareUpgradeCompletedAnalyticsEvent.FirmwareUpgradeCompletedStatus.Failure;
                 }
                 Copilot.getInstance().Report.logEvent(new FirmwareUpgradeCompletedAnalyticsEvent(firmwareUpgradeStatus));
-            }
+                break;
 
-            case "logErrorReportEvent" -> {
+            case "logErrorReportEvent":
                 String error = call.argument("error");
-                String screenName = call.argument("screenName");
+                screenName = call.argument("screenName");
                 Copilot.getInstance().Report.logEvent(new ErrorAnalyticsEvent(error, screenName));
-            }
+                break;
 
-            case "enableInAppMessages" -> Copilot.getInstance().InAppMessages.enable();
+            case "enableInAppMessages":
+                Copilot.getInstance().InAppMessages.enable();
+                break;
 
-            case "disableInAppMessages" -> Copilot.getInstance().InAppMessages.disable();
+            case "disableInAppMessages":
+                Copilot.getInstance().InAppMessages.disable();
+                break;
 
-            default -> result.notImplemented();
+            default:
+                result.notImplemented();
         }
 
         result.success(null);
