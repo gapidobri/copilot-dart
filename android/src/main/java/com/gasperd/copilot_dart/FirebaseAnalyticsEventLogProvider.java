@@ -40,7 +40,6 @@ public class FirebaseAnalyticsEventLogProvider implements EventLogProvider {
 
     @Override
     public void setUserId(String userId) {
-        // FirebaseAnalytics.getInstance(mContext).setUserId(userId);
         channel.invokeMethod("setUserId", userId);
     }
 
@@ -52,7 +51,6 @@ public class FirebaseAnalyticsEventLogProvider implements EventLogProvider {
     @Override
     public void logEvent(@NotNull String eventName, Map<String, String> transformedParams) {
         Bundle bundle = buildEventBundle(transformedParams);
-        // FirebaseAnalytics.getInstance(mContext).logEvent(eventName, bundle);
         HashMap<String, Object> arguments = new HashMap<>();
         arguments.put("eventName", eventName);
         arguments.put("transformedParams", transformedParams);

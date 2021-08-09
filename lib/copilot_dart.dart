@@ -16,9 +16,12 @@ class CopilotDart {
         case 'logEvent':
           final arguments = call.arguments as Map<String, dynamic>;
           final eventName = arguments['eventName'] as String;
-          final transformedParams =
-              arguments['transformedParams'] as Map<String, String>;
+          final transformedParams = arguments['transformedParams'] as Map<String, String>;
           return logEvent(eventName, transformedParams);
+        case 'generateUserAuthKey':
+          final arguments = call.arguments as Map<String, dynamic>;
+          final userId = arguments['userId'] as String;
+          return generateUserAuthKey(userId);
         default:
           throw MissingPluginException();
       }
@@ -34,6 +37,11 @@ class CopilotDart {
     Map<String, String> transformedParams,
   ) async {
     await _analytics.logEvent(name: eventName, parameters: transformedParams);
+  }
+
+  static Future<String> generateUserAuthKey(String userId) async {
+    // TODO: Implement backend call
+    return '';
   }
 
   static Future<void> sessionStarted({
@@ -80,8 +88,7 @@ class CopilotDart {
     await _channel.invokeMethod('logSuccessfulElevateAnonymousEvent');
   }
 
-  static Future<void> logAcceptTermsOfUseEvent(
-      {required String version}) async {
+  static Future<void> logAcceptTermsOfUseEvent({required String version}) async {
     await _channel.invokeMethod(
       'logAcceptTermsOfUseEvent',
       {
@@ -258,10 +265,7 @@ class CopilotDart {
     await _channel.invokeMethod(
       'logFirmwareUpgradeCompletedEvent',
       {
-        'firmwareUpgradeStatus':
-            firmwareUpgradeStatus == FirmwareUpgradeStatus.success
-                ? 'success'
-                : 'failure',
+        'firmwareUpgradeStatus': firmwareUpgradeStatus == FirmwareUpgradeStatus.success ? 'success' : 'failure',
       },
     );
   }
@@ -278,7 +282,7 @@ class CopilotDart {
       },
     );
   }
-  
+
   static Future<void> enableInAppMessages() async {
     await _channel.invokeMethod('enableInAppMessages');
   }
@@ -286,7 +290,6 @@ class CopilotDart {
   static Future<void> disableInAppMessages() async {
     await _channel.invokeMethod('disableInAppMessages');
   }
-
 }
 
 enum FirmwareUpgradeStatus {
